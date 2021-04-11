@@ -4,7 +4,7 @@ import pickle
 
 from sklearn.linear_model import LogisticRegression
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='template')
 model = pickle.load(open('loans_approval_prediction_model.pkl', 'rb'))
 @app.route('/',methods=['GET'])
 def Home():
