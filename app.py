@@ -4,8 +4,8 @@ import pickle
 
 from sklearn.linear_model import LogisticRegression
 
-app = Flask(__name__, template_folder='template')
-model = pickle.load(open('loans_approval_prediction_model.pkl', 'rb'))
+app = Flask(__name__,template_folder='template')
+model = pickle.load(open('loan_approval_prediction_model.pkl', 'rb'))
 @app.route('/',methods=['GET'])
 def Home():
     return render_template('index.html')
@@ -23,7 +23,7 @@ def predict():
         Credit_History=float(request.form['Credit_History'])
         Property_Area=str(request.form['Property_Area'])
         if(Property_Area=='Urban'):
-          Property_Area=2
+          Property_Area=1
         else:
           Property_Area=0
         Self_employed=str(request.form['self_employed'])
@@ -56,13 +56,8 @@ def predict():
         else:
             Gender=0
         prediction=model.predict([[Applicant_income,Coapplicant_income,Loan_Amount,Loan_Amount_Term,Credit_History,Property_Area,Self_employed,Dependents,Education,Married,Gender,Loan_Id]])
-        output=round(prediction[0],2)
-        if output<0:
-            return render_template('index.html',prediction_texts="Sorry you are not eligible")
-        else:
-            return render_template('index.html',prediction_text="You are eligible")
+        return render_template('index.html')
     else:
         return render_template('index.html')
-
 if __name__=="__main__":
-    app.run(debug=True)
+    app.run(debug=True,use_reloader=False)
