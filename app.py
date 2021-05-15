@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify,redirect, url_for
 import  requests
 import pickle
 
@@ -15,23 +15,23 @@ lr = LogisticRegression
 @app.route("/predict", methods=['POST'])
 def predict():
     if request.method == 'POST':
-        Loan_Id=str(request.form['Loan_Id'])
-        Applicant_income=int(request.form['Applicant_income'])
-        Coapplicant_income=int(request.form['Coapplicant_income'])
-        Loan_Amount=float(request.form['Loan_Amount'])
-        Loan_Amount_Term=float(request.form['Loan_Amount_Term'])
-        Credit_History=float(request.form['Credit_History'])
-        Property_Area=str(request.form['Property_Area'])
+        Loan_Id=str(request.form.get('Loan_Id'))
+        Applicant_income=str(request.form.get('Applicant_income'))
+        Coapplicant_income=str(request.form.get('Coapplicant_income'))
+        Loan_Amount=str(request.form.get('Loan_Amount'))
+        Loan_Amount_Term=str(request.form.get('Loan_Amount_Term'))
+        Credit_History=str(request.form.get('Credit_History'))
+        Property_Area=str(request.form.get('Property_Area'))
         if(Property_Area=='Urban'):
           Property_Area=1
-        else:
+        else:       
           Property_Area=0
-        Self_employed=str(request.form['self_employed'])
+        Self_employed=str(request.form.get('self_employed'))
         if(Self_employed=='yes'):
            Self_employed=1
         else:
              Self_employed=0
-        Dependents=int(request.form['Dependents'])
+        Dependents=str(request.form.get('Dependents'))
         if(Dependents=='0'):
            Dependents=0
         elif(Dependents=='1'):
@@ -40,24 +40,23 @@ def predict():
             Dependents=2
         else:
             Dependents=3
-        Education=str(request.form['Education'])
+        Education=str(request.form.get('Education'))
         if(Education=='Graduate'):
            Education=1
         else:
            Education=0
-           Married=str(request.form['Married'])
+        Married=str(request.form.get('Married'))
         if(Married=='yes'):
            Married=1
         else:
             Married=0
-        Gender=str(request.form['Gender'])
+        Gender=str(request.form.get('Gender'))
         if(Gender=='Male'):
            Gender=1
         else:
             Gender=0
         prediction=model.predict([[Applicant_income,Coapplicant_income,Loan_Amount,Loan_Amount_Term,Credit_History,Property_Area,Self_employed,Dependents,Education,Married,Gender,Loan_Id]])
         return render_template('index.html')
-    else:
-        return render_template('index.html')
+
 if __name__=="__main__":
     app.run(debug=True,use_reloader=False)
